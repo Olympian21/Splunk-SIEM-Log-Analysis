@@ -10,6 +10,9 @@ a working security dashboard and automated alert on top of that data.
 
 ---
 
+## WATCH THE LAB WALKTHROUGH HERE!
+https://www.loom.com/share/46adb7efd15342bba8f3c076e60395cd
+
 ## The business problem this solves
 
 A mid-sized organization generates millions of log events a day across
@@ -488,12 +491,16 @@ index=windows_logs | head 100
 ```
 Returns nothing → check that `SplunkForwarder` is running on the Windows VM.
 
+![Confirm data is flowing](screenshots/confirm-data-is-flowing.png)
+
 **Find successful logins (EventCode 4624):**
 ```spl
 index=windows_logs sourcetype=WinEventLog:Security EventCode=4624
 | stats count by Account_Name
 | sort -count
 ```
+
+![Find Succesful Logins](screenshots/find-successful-logins.png)
 
 **Detect after-hours logins:**
 ```spl
@@ -505,6 +512,8 @@ index=windows_logs sourcetype=WinEventLog:Security EventCode=4624
 ```
 Account names ending in `$` are computer accounts and expected overnight; a
 human account authenticating after hours warrants review.
+
+![After hours logins](screenshots/detect-after-hours-logins.png)
 
 ---
 
@@ -528,6 +537,8 @@ section above.
 1. Run the privileged-logon search (in the
    [Automated Alert](#automated-alert--high-privileged-logon-count) section
    above) in the search bar first to confirm it works.
+![High Privileged Alert](screenshots/high-priv-alert.png)
+   
 2. **Save As → Alert.**
 3. Name: `High Privileged Logon Count`. Alert type: **Scheduled**. Run every
    15 minutes via **Cron Schedule**: `*/15 * * * *`.
@@ -536,6 +547,8 @@ section above.
    **Activity → Triggered Alerts** with a timestamp and result count, no
    email or ticketing integration required.
 6. **Save.**
+
+![Automated Alert](screenshots/automated-alert.png)
 
 An alert that fires too broadly creates alert fatigue; one that's too narrow
 misses real threats — the threshold here is a starting point to tune against
